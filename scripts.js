@@ -152,6 +152,8 @@ function updateInfo() {
       let label = key.replace("_", " ");
       if (key === "BOD5") {
         label = "BOD<sub>5</sub>";
+      } else if (key === "Cr6") {
+        label = "Cr<sup>6+</sup>";
       }
       parametersHTML += `
                 <div class="form-group">
