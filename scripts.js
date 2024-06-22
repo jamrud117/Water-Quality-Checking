@@ -185,26 +185,26 @@ function checkQuality() {
             resultHTML += `<p>${key.replace(
               "_",
               " "
-            )}: ${value} (Tidak Masuk Baku Mutu)</p>`;
+            )}: ${value} <span class="fail">(Tidak Masuk Baku Mutu)</span></p>`;
             pass = false;
           } else {
             resultHTML += `<p>${key.replace(
               "_",
               " "
-            )}: ${value} (Masuk Baku Mutu)</p>`;
+            )}: ${value} <span class="pass">(Masuk Baku Mutu)</span></p>`;
           }
         } else {
           if (value > info[key]) {
             resultHTML += `<p>${key.replace(
               "_",
               " "
-            )}: ${value} (Tidak Masuk Baku Mutu)</p>`;
+            )}: ${value} <span class="fail">(Tidak Masuk Baku Mutu)</span></p>`;
             pass = false;
           } else {
             resultHTML += `<p>${key.replace(
               "_",
               " "
-            )}: ${value} (Masuk Buku Mutu)</p>`;
+            )}: ${value} <span class="pass">(Masuk Baku Mutu)</span></p>`;
           }
         }
       }
