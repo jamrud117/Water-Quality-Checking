@@ -1,39 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Water Quality Checker</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <div class="container">
-        <h1>Water Quality Checker</h1>
-        <div class="main-content">
-            <form id="qualityForm">
-                <label for="standard">Choose a Standard:</label>
-                <select id="standard" name="standard" onchange="updateInfo()">
-                    <option value="domestic">Domestic Wastewater Quality Standard</option>
-                    <option value="palm_oil">Palm Oil Industry Wastewater Standard</option>
-                    <option value="meat_processing">Meat Processing Wastewater Standard</option>
-                    <option value="traditional_medicine">Traditional Medicine Processing Wastewater Standard</option>
-                    <option value="electronics">Electronics Industry Wastewater Standard</option>
-                    <option value="ceramics">Ceramics Industry Wastewater Standard</option>
-                </select>
+      <h1>Wastewater Quality Checker</h1>
+      <div class="main-content">
+        <form id="qualityForm">
+          <label for="standard">Choose a Standard:</label>
+          <select id="standard" name="standard" onchange="updateInfo()">
+            <option value="domestic">
+              Domestic Wastewater Quality Standard
+            </option>
+            <option value="palm_oil">
+              Palm Oil Industry Wastewater Standard
+            </option>
+            <option value="meat_processing">
+              Meat Processing Wastewater Standard
+            </option>
+            <option value="traditional_medicine">
+              Traditional Medicine Processing Wastewater Standard
+            </option>
+            <option value="electronics">
+              Electronics Industry Wastewater Standard
+            </option>
+            <option value="ceramics">
+              Ceramics Industry Wastewater Standard
+            </option>
+          </select>
 
-                <div id="parameters"></div>
+          <div id="parameters"></div>
 
-                <button type="button" onclick="checkQuality()">Check Quality</button>
-            </form>
-            <div id="info"></div>
-        </div>
-        <div id="result"></div>
+          <button type="button" onclick="checkQuality()">Check Quality</button>
+        </form>
+        <div id="info"></div>
+      </div>
+      <div id="result"></div>
     </div>
     <footer>
-        <p>Teknik Lingkungan</p>
-        <p>Universitas Sahid Jakarta</p>
+      <p>Teknik Lingkungan</p>
+      <p>Universitas Sahid Jakarta</p>
     </footer>
 
     <script src="scripts.js"></script>
-</body>
+  </body>
 </html>

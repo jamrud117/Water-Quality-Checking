@@ -1,4 +1,6 @@
+// Mendefinisikan objek array `standards` yang berisi berbagai standar untuk berbagai kategori industri
 const standards = {
+  // Standar untuk kategori domestik
   domestic: {
     pH: [6, 9],
     BOD: 30,
@@ -19,8 +21,9 @@ const standards = {
                 <tr><td>Amonia</td><td>10 mg/L</td></tr>
                 <tr><td>Total Coliform</td><td>3000 Jumlah/100mL</td></tr>
                 <tr><td>Debit</td><td>100 L/orang/hari</td></tr>
-            </table>`,
+            </table>`, // Deskripsi standar dalam bentuk tabel HTML
   },
+  // Standar untuk kategori kelapa sawit
   palm_oil: {
     pH: [6, 9],
     BOD5: 100,
@@ -41,6 +44,7 @@ const standards = {
                 <tr><td>Debit Limbah</td><td>2.5 m²/ton CPO</td></tr>
             </table>`,
   },
+  // Standar untuk kategori pengolahan daging
   meat_processing: {
     pH: [6, 9],
     BOD: 125,
@@ -61,6 +65,7 @@ const standards = {
                 <tr><td>Kuantitas Air Limbah</td><td>6 m³/ton bahan baku</td></tr>
             </table>`,
   },
+  // Standar untuk kategori obat tradisional
   traditional_medicine: {
     pH: [6, 9],
     BOD: 75,
@@ -79,6 +84,7 @@ const standards = {
                 <tr><td>Kuantitas Air Limbah</td><td>15 m³/ton bahan baku</td></tr>
             </table>`,
   },
+  // Standar untuk kategori elektronik
   electronics: {
     pH: [6, 9],
     BOD5: 50,
@@ -115,6 +121,7 @@ const standards = {
                 <tr><td>Ni</td><td>0.5 mg/L</td></tr>
             </table>`,
   },
+  // Standar untuk kategori keramik
   ceramics: {
     pH: [6, 9],
     TSS: 100,
@@ -137,12 +144,13 @@ const standards = {
   },
 };
 
+// Fungsi untuk memperbarui informasi standar yang dipilih
 function updateInfo() {
   const standard = document.getElementById("standard").value;
   const info = standards[standard];
   document.getElementById("info").innerHTML = info.description;
 
-  // Mengosongkan hasil sebelum memperbarui konten parameter
+  // Mengosongkan hasil sebelumnya saat memperbarui informasi
   document.getElementById("result").innerHTML = "";
 
   let parametersHTML = "";
@@ -155,72 +163,117 @@ function updateInfo() {
       } else if (key === "Cr6") {
         label = "Cr<sup>6+</sup>";
       }
+
+      let unit = "mg/L";
+      if (key === "Debit") {
+        unit = "L/orang/hari";
+      } else if (key === "Kuantitas_Air_Limbah") {
+        unit = "m³/ton bahan baku";
+      } else if (key === "Debit_Limbah") {
+        unit = "m²/ton CPO";
+      }
+
       parametersHTML += `
-                <div class="form-group">
-                    <label for="${key}">${label} (${
-        Array.isArray(info[key]) ? info[key].join("-") : info[key]
-      } mg/L):</label>
-                    <input type="text" id="${key}" name="${key}">
-                </div>`;
+        <div class="form-group">
+          <label for="${key}">${label} (${unit}):</label>
+          <input type="text" id="${key}" name="${key}">
+        </div>`;
     }
   }
 
   document.getElementById("parameters").innerHTML = parametersHTML;
 }
 
+// Fungsi untuk memeriksa kualitas input yang dimasukkan pengguna
 function checkQuality() {
-  // Mengosongkan hasil sebelum menampilkan hasil baru
+  // Mengosongkan elemen dengan id "result"
   document.getElementById("result").innerHTML = "";
 
+  // Mengambil semua input di dalam elemen dengan id "parameters"
+  const inputs = document.querySelectorAll("#parameters input");
+
+  // Menghapus kelas "warning" dari setiap input
+  inputs.forEach((input) => input.classList.remove("warning"));
+
+  // Mengambil nilai dari elemen dengan id "standard"
   const standard = document.getElementById("standard").value;
+
+  // Mengambil informasi standar berdasarkan nilai yang diambil
   const info = standards[standard];
+
+  // Menyiapkan variabel untuk HTML hasil dan status pemeriksaan
   let resultHTML = "<h3>Results:</h3>";
   let pass = true;
+  let valid = true;
 
+  // Looping melalui setiap key di dalam objek info
   for (let key in info) {
     if (key !== "description") {
-      const input = document.getElementById(key).value;
-      if (input) {
-        const value = parseFloat(input);
+      // Mengambil elemen input berdasarkan id key
+      const input = document.getElementById(key);
+      // Mengambil dan memangkas nilai input
+      const value = input.value.trim();
+
+      // Jika nilai kosong, tambahkan kelas "warning" dan set valid menjadi false
+      if (!value) {
+        input.classList.add("warning");
+        valid = false;
+      } else {
+        // Konversi nilai menjadi angka
+        const numValue = parseFloat(value);
+
+        // Jika nilai info untuk key adalah array (rentang nilai)
         if (Array.isArray(info[key])) {
-          if (value < info[key][0] || value > info[key][1]) {
+          // Cek apakah nilai berada di dalam rentang
+          if (numValue < info[key][0] || numValue > info[key][1]) {
             resultHTML += `<p>${key.replace(
               "_",
               " "
-            )}: ${value} <span class="fail">(Tidak Masuk Baku Mutu)</span></p>`;
+            )}: ${numValue} <span class="fail">Tidak Masuk Baku Mutu</span></p>`;
             pass = false;
           } else {
             resultHTML += `<p>${key.replace(
               "_",
               " "
-            )}: ${value} <span class="pass">(Masuk Baku Mutu)</span></p>`;
+            )}: ${numValue} <span class="pass">Masuk Baku Mutu</span></p>`;
           }
         } else {
-          if (value > info[key]) {
+          // Jika nilai info untuk key adalah angka (nilai maksimum)
+          if (numValue > info[key]) {
             resultHTML += `<p>${key.replace(
               "_",
               " "
-            )}: ${value} <span class="fail">(Tidak Masuk Baku Mutu)</span></p>`;
+            )}: ${numValue} <span class="fail">Tidak Masuk Baku Mutu</span></p>`;
             pass = false;
           } else {
             resultHTML += `<p>${key.replace(
               "_",
               " "
-            )}: ${value} <span class="pass">(Masuk Baku Mutu)</span></p>`;
+            )}: ${numValue} <span class="pass">Masuk Baku Mutu</span></p>`;
           }
         }
       }
     }
   }
 
-  resultHTML += `<p class="${pass ? "pass" : "fail"}">${
-    pass
-      ? "All parameters are within the acceptable range."
-      : "Some parameters are outside the acceptable range."
-  }</p>`;
+  // Jika ada input yang tidak valid, tambahkan pesan peringatan ke hasil HTML
+  if (!valid) {
+    resultHTML =
+      "<p class='warning'>Tolong isi semua input field.</p>" + resultHTML;
+  } else {
+    // Tambahkan pesan hasil akhir ke hasil HTML
+    resultHTML += `<p class="${pass ? "pass" : "fail"}">${
+      pass
+        ? "Semua parameter memenuhi standar maksimum."
+        : "Beberapa parameter berada di luar batas standar maksimum."
+    }</p>`;
+  }
+
+  // Menampilkan hasil di elemen dengan id "result"
   document.getElementById("result").innerHTML = resultHTML;
 }
 
+// Menambahkan event listener untuk menjalankan fungsi updateInfo setelah DOM selesai dimuat
 document.addEventListener("DOMContentLoaded", function () {
-  updateInfo(); // Panggil fungsi updateInfo saat halaman pertama kali dimuat
+  updateInfo();
 });
